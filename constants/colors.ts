@@ -4,4 +4,5 @@ export const colors = {
     mint:  '#D7FFD4',
     black: '#000000',
     white: '#FFFFFF',
+    grey: '#F6F6F6',
 }
