@@ -1,4 +1,4 @@
-import {ActivityIndicator, Alert, FlatList, Pressable, StyleSheet, Text} from "react-native";
+import {ActivityIndicator, Alert, FlatList, Pressable, StyleSheet, Text, useColorScheme, View} from "react-native";
 import {useEffect, useState} from "react";
 import {getCategories} from "@/db/categories";
 import {colors} from "@/constants/colors";
@@ -13,6 +13,8 @@ export const CategoriesList = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    const colorScheme = useColorScheme();
 
     const onPress = () => Alert.alert("Alert", "Coming soon!");
 
@@ -41,32 +43,42 @@ export const CategoriesList = () => {
             contentContainerStyle={{paddingHorizontal: 16}}
             showsHorizontalScrollIndicator={false}
             renderItem={({item}) => (
-                <Pressable style={styles.container} onPress={onPress}>
-                    <Text style={styles.icon}>{item.icon}</Text>
-                    <Text style={styles.text}>{item.name}</Text>
-                </Pressable>
+                <View style={styles.item}>
+                    <Pressable
+                        style={[styles.container, {backgroundColor: colorScheme === "dark" ? colors.darkGrey : colors.white},]}
+                        onPress={onPress}>
+                        <Text style={styles.icon}>{item.icon}</Text>
+                    </Pressable>
+
+                    <Text style={[styles.text, {color: colorScheme === "dark" ? colors.white : colors.black}]}
+                          numberOfLines={1}>{item.name}</Text>
+                </View>
             )}
         />
     );
 };
 
 const styles = StyleSheet.create({
+    item: {
+        width: 88,
+        alignItems: "center",
+        marginRight: 12,
+    },
     container: {
-        width: 110,
-        height: 75,
-        paddingHorizontal: 18,
-        borderRadius: 38,
-        backgroundColor: colors.grey,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 8,
+        width: 72,
+        height: 72,
+        borderRadius: 36,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: colors.lightGrey,
     },
     icon: {
-        fontSize: 18,
+        fontSize: 26,
     },
     text: {
-        color: colors.black,
+        marginTop: 8,
         fontSize: 14,
-        fontWeight: '400',
+        fontWeight: "400",
+        textAlign: "center",
     },
 });

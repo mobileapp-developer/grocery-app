@@ -41,7 +41,7 @@ export default function Home() {
                     <CategoriesList/>
                 </View>
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Fruits</Text>
+                    <Text style={[styles.sectionTitle, {color: colorScheme === 'dark' ? colors.white : colors.black}]}>Fruits</Text>
                     <Pressable onPress={onPress}>
                         <Text style={styles.viewAll}>View all</Text>
                     </Pressable>
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 20,
         fontWeight: '700',
-        color: colors.black,
     },
     viewAll: {
         fontSize: 16,
