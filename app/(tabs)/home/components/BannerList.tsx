@@ -1,8 +1,8 @@
-import {BANNERS} from "@/constants/banners";
-import {BannerCard} from "@/app/(tabs)/home/components/BannerCard";
 import {FlatList} from "react-native";
+import {BANNERS} from "@/constants/banners";
+import BannerCard from "@/app/(tabs)/home/components/BannerCard";
 
-export const BannerList = () => {
+const BannerList = () => {
     return (
         <FlatList
             data={BANNERS}
@@ -21,5 +21,7 @@ export const BannerList = () => {
                 />
             )}
         />
-    )
-}
+    );
+};
+
+export default BannerList;

@@ -11,7 +11,7 @@ type Props = {
     image: ImageSourcePropType;
 };
 
-export const BannerCard = ({title, subtitle, color, titleColor, subtitleColor, buttonColor, image}: Props) => {
+const BannerCard = ({title, subtitle, color, titleColor, subtitleColor, buttonColor, image}: Props) => {
     const {width} = Dimensions.get('window');
     const buttonTextColor = isWhite(buttonColor) ? "#111111" : "#FFFFFF";
 
@@ -89,3 +89,5 @@ const styles = StyleSheet.create({
         height: 170,
     },
 });
+
+export default BannerCard;

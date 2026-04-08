@@ -1,17 +1,22 @@
 import {Alert, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View} from "react-native";
 import {Entypo, Ionicons, MaterialIcons} from "@expo/vector-icons";
-import {BannerList} from "@/app/(tabs)/home/components/BannerList";
+import BannerList from "@/app/(tabs)/home/components/BannerList";
 import {colors} from "@/constants/colors";
-import {CategoriesList} from "@/app/(tabs)/home/components/CategoriesList";
+import CategoriesList from "@/app/(tabs)/home/components/CategoriesList";
+import CardList from "@/components/CardList";
+import {useRouter} from "expo-router";
 
 export default function Home() {
+    const router = useRouter();
+
     const colorScheme = useColorScheme();
 
     const onPress = () => Alert.alert("Alert", "Coming soon!");
+    const viewAllFruits = () => router.push('/home/1');
 
     return (
         <ScrollView
-            style={[styles.container, {backgroundColor: colorScheme === 'dark' ? colors.black : colors.white}]}
+            style={{backgroundColor: colorScheme === 'dark' ? colors.black : colors.white}}
             contentInsetAdjustmentBehavior="automatic"
             showsVerticalScrollIndicator={false}
         >
@@ -41,7 +46,18 @@ export default function Home() {
                     <CategoriesList/>
                 </View>
                 <View style={styles.section}>
-                    <Text style={[styles.sectionTitle, {color: colorScheme === 'dark' ? colors.white : colors.black}]}>Fruits</Text>
+                    <Text
+                        style={[styles.sectionTitle, {color: colorScheme === 'dark' ? colors.white : colors.black}]}>Fruits</Text>
+                    <Pressable onPress={viewAllFruits}>
+                        <Text style={styles.viewAll}>View all</Text>
+                    </Pressable>
+                </View>
+                <View>
+                    <CardList/>
+                </View>
+                <View style={styles.section}>
+                    <Text
+                        style={[styles.sectionTitle, {color: colorScheme === 'dark' ? colors.white : colors.black}]}>Vegetables</Text>
                     <Pressable onPress={onPress}>
                         <Text style={styles.viewAll}>View all</Text>
                     </Pressable>
@@ -52,7 +68,6 @@ export default function Home() {
 };
 
 const styles = StyleSheet.create({
-    container: {},
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -86,6 +101,10 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     categories: {
+        marginTop: 8,
+        marginBottom: 12,
+    },
+    products: {
         marginTop: 8,
         marginBottom: 12,
     },
