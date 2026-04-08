@@ -7,11 +7,29 @@ export default function HomeLayout() {
     return (
         <Stack
             screenOptions={{
-                headerTitle: "Home",
                 headerLargeTitle: true,
                 headerTransparent: true,
                 headerBlurEffect: colorScheme === 'dark' ? 'dark' : 'light',
             }}
-        />
+        >
+            <Stack.Screen
+                name="index"
+                options={{
+                    headerShown: true,
+                    headerTitle: 'Home',
+                }}
+            />
+            <Stack.Screen
+                name="[categoryId]"
+                options={({route}) => {
+                    const params = route.params as { title?: string } | undefined;
+
+                    return {
+                        headerShown: true,
+                        headerTitle: params?.title ?? "All fruits",
+                    };
+                }}
+            />
+        </Stack>
     );
 }

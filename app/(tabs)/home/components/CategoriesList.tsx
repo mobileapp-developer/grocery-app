@@ -1,7 +1,8 @@
-import {ActivityIndicator, Alert, FlatList, Pressable, StyleSheet, Text, useColorScheme, View} from "react-native";
+import {ActivityIndicator, FlatList, Pressable, StyleSheet, Text, useColorScheme, View} from "react-native";
 import {useEffect, useState} from "react";
 import {getCategories} from "@/db/categories";
 import {colors} from "@/constants/colors";
+import {useRouter} from "expo-router";
 
 type Category = {
     id: number;
@@ -9,14 +10,14 @@ type Category = {
     icon: string;
 };
 
-export const CategoriesList = () => {
+const CategoriesList = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const colorScheme = useColorScheme();
+    const router = useRouter();
 
-    const onPress = () => Alert.alert("Alert", "Coming soon!");
+    const colorScheme = useColorScheme();
 
     useEffect(() => {
         const loadCategories = async () => {
@@ -45,8 +46,14 @@ export const CategoriesList = () => {
             renderItem={({item}) => (
                 <View style={styles.item}>
                     <Pressable
-                        style={[styles.container, {backgroundColor: colorScheme === "dark" ? colors.darkGrey : colors.white},]}
-                        onPress={onPress}>
+                        style={[styles.container, {backgroundColor: colorScheme === "dark" ? colors.darkGrey : colors.lightGrey},]}
+                        onPress={() => router.push({
+                            pathname: "/(tabs)/home/[categoryId]",
+                            params: {
+                                categoryId: item.id.toString(),
+                                title: item.name,
+                            },
+                        })}>
                         <Text style={styles.icon}>{item.icon}</Text>
                     </Pressable>
 
@@ -82,3 +89,5 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
 });
+
+export default CategoriesList;
