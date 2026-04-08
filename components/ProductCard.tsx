@@ -8,18 +8,22 @@ type Props = {
     rating: number;
     price: number;
     cardStyle?: StyleProp<ViewStyle>;
+    onAddPress?: () => void;
 };
 
-const ProductCard = ({image, title, rating, price, cardStyle}: Props) => {
+const ProductCard = ({image, title, rating, price, cardStyle, onAddPress}: Props) => {
     const colorScheme = useColorScheme();
     return (
-        <View style={[styles.card, {backgroundColor: colorScheme === 'dark' ? colors.black : colors.white,}, cardStyle]}>
+        <View
+            style={[styles.card, {backgroundColor: colorScheme === 'dark' ? colors.black : colors.white,}, cardStyle]}>
             <View style={styles.cardTop}>
                 <View
                     style={[styles.imageContainer, {backgroundColor: colorScheme === 'dark' ? colors.darkGrey : colors.lightGrey}]}>
                     <Image source={{uri: image}} style={styles.image} resizeMode="contain"/>
                 </View>
                 <Pressable
+                    onPress={onAddPress}
+                    disabled={!onAddPress}
                     style={[styles.addButton, {backgroundColor: colorScheme === 'dark' ? colors.black : colors.white,}]}>
                     <Feather name="plus" size={26} color={colorScheme === 'dark' ? 'white' : 'black'}/>
                 </Pressable>
