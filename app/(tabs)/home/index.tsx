@@ -1,14 +1,18 @@
-import {Pressable, ScrollView, StyleSheet, Text, useColorScheme, View} from "react-native";
+import {ActivityIndicator, ScrollView, StyleSheet, Text, useColorScheme, View} from "react-native";
 import {Entypo, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import BannerList from "@/app/(tabs)/home/components/BannerList";
 import {colors} from "@/constants/colors";
 import CategoriesList from "@/app/(tabs)/home/components/CategoriesList";
-import CardList from "@/components/CardList";
-import {useRouter} from "expo-router";
+import CategorySection from "@/app/(tabs)/home/components/CategorySection";
+import {useCategory} from "@/hooks/useCategory";
 
 export default function Home() {
-    const router = useRouter();
+    const {categories, loading, error} = useCategory();
+
     const colorScheme = useColorScheme();
+
+    if (loading) return <ActivityIndicator/>
+    if (error) return <Text>{error}</Text>
 
     return (
         <ScrollView
@@ -33,6 +37,7 @@ export default function Home() {
                 </View>
             </View>
 
+
             {/* MAIN CONTENT*/}
             <View style={styles.content}>
                 <View style={styles.banner}>
@@ -42,42 +47,13 @@ export default function Home() {
                     <CategoriesList/>
                 </View>
 
-                <View style={styles.section}>
-                    <Text
-                        style={[styles.sectionTitle, {color: colorScheme === 'dark' ? colors.white : colors.black}]}>Fruits</Text>
-                    <Pressable onPress={() => router.push('/home/1')}>
-                        <Text style={styles.viewAll}>View all</Text>
-                    </Pressable>
-                </View>
-
-                <View>
-                    <CardList category_id={1}/>
-                </View>
-
-                <View style={styles.section}>
-                    <Text
-                        style={[styles.sectionTitle, {color: colorScheme === 'dark' ? colors.white : colors.black}]}>Vegetables</Text>
-                    <Pressable onPress={() => router.push('/home/2')}>
-                        <Text style={styles.viewAll}>View all</Text>
-                    </Pressable>
-                </View>
-
-                <View>
-                    <CardList category_id={2}/>
-                </View>
-
-                <View style={styles.section}>
-                    <Text
-                        style={[styles.sectionTitle, {color: colorScheme === 'dark' ? colors.white : colors.black}]}>Dairy</Text>
-                    <Pressable onPress={() => router.push('/home/3')}>
-                        <Text style={styles.viewAll}>View all</Text>
-                    </Pressable>
-                </View>
-
-                <View>
-                    <CardList category_id={3}/>
-                </View>
-
+                {categories.map((category) => (
+                    <CategorySection
+                        key={category.id}
+                        title={category.name}
+                        category_id={category.id}
+                    />
+                ))}
             </View>
         </ScrollView>
     );
@@ -123,23 +99,5 @@ const styles = StyleSheet.create({
     products: {
         marginTop: 8,
         marginBottom: 12,
-    },
-    section: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
-        paddingLeft: 16,
-        paddingTop: 12,
-    },
-    sectionTitle: {
-        fontSize: 20,
-        fontWeight: '700',
-    },
-    viewAll: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: colors.green,
-        paddingRight: 16,
     },
 });

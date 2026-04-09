@@ -1,37 +1,13 @@
 import {ActivityIndicator, FlatList, Pressable, StyleSheet, Text, useColorScheme, View} from "react-native";
-import {useEffect, useState} from "react";
-import {getCategories} from "@/db/categories";
 import {colors} from "@/constants/colors";
 import {useRouter} from "expo-router";
-
-type Category = {
-    id: number;
-    name: string;
-    icon: string;
-};
+import {useCategory} from "@/hooks/useCategory";
 
 const CategoriesList = () => {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const {categories, loading, error} = useCategory();
 
     const router = useRouter();
-
     const colorScheme = useColorScheme();
-
-    useEffect(() => {
-        const loadCategories = async () => {
-            try {
-                const data = await getCategories();
-                setCategories((data ?? []) as Category[]);
-            } catch (e) {
-                setError(e instanceof Error ? e.message : "Failed to load categories");
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadCategories();
-    }, []);
 
     if (loading) return <ActivityIndicator/>
     if (error) return <Text>{error}</Text>
