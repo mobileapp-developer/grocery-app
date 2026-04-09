@@ -71,7 +71,7 @@ export default function CategoryProductsScreen() {
             numColumns={2}
             contentContainerStyle={styles.listContent}
             renderItem={({item}) => (
-                <View style={styles.itemWrapper}>
+                <View style={[styles.itemWrapper, {}]}>
                     <ProductCard
                         image={item.image}
                         title={item.title}
