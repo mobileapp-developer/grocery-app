@@ -17,9 +17,18 @@ const CategorySection = ({title, category_id}: Props) => {
             <View style={styles.section}>
                 <Text
                     style={[styles.sectionTitle, {color: colorScheme === 'dark' ? colors.white : colors.black}]}>{title}</Text>
-                <Pressable onPress={() => router.push(`/home/${category_id}`)}>
+                <Pressable
+                    onPress={() => router.push({
+                        pathname: "/(tabs)/home/[categoryId]",
+                        params: {
+                            categoryId: category_id.toString(),
+                            title,
+                        },
+                    })}
+                >
                     <Text style={styles.viewAll}>View all</Text>
                 </Pressable>
+
             </View>
             <View>
                 <CardList category_id={category_id}/>

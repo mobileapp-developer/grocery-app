@@ -7,9 +7,9 @@ import CategorySection from "@/app/(tabs)/home/components/CategorySection";
 import {useCategory} from "@/hooks/useCategory";
 
 export default function Home() {
-    const {categories, loading, error} = useCategory();
-
     const colorScheme = useColorScheme();
+
+    const {categories, loading, error} = useCategory();
 
     if (loading) return <ActivityIndicator/>
     if (error) return <Text>{error}</Text>
@@ -36,7 +36,6 @@ export default function Home() {
                               color={colorScheme === 'dark' ? colors.white : colors.black}/>
                 </View>
             </View>
-
 
             {/* MAIN CONTENT*/}
             <View style={styles.content}>
