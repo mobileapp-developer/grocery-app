@@ -1,23 +1,23 @@
-import {Alert, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View} from "react-native";
+import {ActivityIndicator, ScrollView, StyleSheet, Text, useColorScheme, View} from "react-native";
 import {Entypo, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import BannerList from "@/app/(tabs)/home/components/BannerList";
 import {colors} from "@/constants/colors";
 import CategoriesList from "@/app/(tabs)/home/components/CategoriesList";
-import CardList from "@/components/CardList";
-import {useRouter} from "expo-router";
+import CategorySection from "@/app/(tabs)/home/components/CategorySection";
+import {useCategory} from "@/hooks/useCategory";
 
 export default function Home() {
-    const router = useRouter();
-
     const colorScheme = useColorScheme();
 
-    const onPress = () => Alert.alert("Alert", "Coming soon!");
-    const viewAllFruits = () => router.push('/home/1');
+    const {categories, loading, error} = useCategory();
+
+    if (loading) return <ActivityIndicator/>
+    if (error) return <Text>{error}</Text>
 
     return (
         <ScrollView
             style={{backgroundColor: colorScheme === 'dark' ? colors.black : colors.white}}
-            contentInsetAdjustmentBehavior="automatic"
+            contentInsetAdjustmentBehavior='automatic'
             showsVerticalScrollIndicator={false}
         >
 
@@ -28,7 +28,7 @@ export default function Home() {
                                    color={colorScheme === 'dark' ? colors.white : colors.black}/>
                     <Text style={[styles.address, {color: colorScheme === 'dark' ? colors.white : colors.black}]}>Your
                         Address...</Text>
-                    <Entypo name="chevron-small-down" size={24}
+                    <Entypo name='chevron-small-down' size={24}
                             color={colorScheme === 'dark' ? colors.white : colors.black}/>
                 </View>
                 <View style={styles.bagIcon}>
@@ -45,23 +45,14 @@ export default function Home() {
                 <View style={styles.categories}>
                     <CategoriesList/>
                 </View>
-                <View style={styles.section}>
-                    <Text
-                        style={[styles.sectionTitle, {color: colorScheme === 'dark' ? colors.white : colors.black}]}>Fruits</Text>
-                    <Pressable onPress={viewAllFruits}>
-                        <Text style={styles.viewAll}>View all</Text>
-                    </Pressable>
-                </View>
-                <View>
-                    <CardList/>
-                </View>
-                <View style={styles.section}>
-                    <Text
-                        style={[styles.sectionTitle, {color: colorScheme === 'dark' ? colors.white : colors.black}]}>Vegetables</Text>
-                    <Pressable onPress={onPress}>
-                        <Text style={styles.viewAll}>View all</Text>
-                    </Pressable>
-                </View>
+
+                {categories.map((category) => (
+                    <CategorySection
+                        key={category.id}
+                        title={category.name}
+                        category_id={category.id}
+                    />
+                ))}
             </View>
         </ScrollView>
     );
@@ -107,23 +98,5 @@ const styles = StyleSheet.create({
     products: {
         marginTop: 8,
         marginBottom: 12,
-    },
-    section: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
-        paddingLeft: 16,
-        paddingTop: 12,
-    },
-    sectionTitle: {
-        fontSize: 20,
-        fontWeight: '700',
-    },
-    viewAll: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: colors.green,
-        paddingRight: 16,
     },
 });

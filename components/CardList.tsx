@@ -9,10 +9,13 @@ type Product = {
     price: number;
     rating: number;
     image: string;
-    category_id: number
-}
+};
 
-const CardList = () => {
+type CardListProps = {
+    category_id: number;
+};
+
+const CardList = ({category_id}: CardListProps) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -20,7 +23,7 @@ const CardList = () => {
     useEffect(() => {
         const loadProducts = async () => {
             try {
-                const data = await getProductsByCategoryId(1);
+                const data = await getProductsByCategoryId(category_id);
                 setProducts((data ?? []) as Product[]);
             } catch (e) {
                 setError(e instanceof Error ? e.message : "Failed to load products");
@@ -29,7 +32,7 @@ const CardList = () => {
             }
         };
         loadProducts();
-    }, []);
+    }, [category_id]);
 
     if (loading) return <ActivityIndicator/>
     if (error) return <Text>{error}</Text>

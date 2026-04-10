@@ -26,7 +26,7 @@ export default function HomeLayout() {
 
                     return {
                         headerShown: true,
-                        headerTitle: params?.title ?? "All fruits",
+                        headerTitle: params?.title ?? "All",
                     };
                 }}
             />
