@@ -1,13 +1,16 @@
-import {ActivityIndicator, ScrollView, StyleSheet, Text, useColorScheme, View} from "react-native";
+import {ActivityIndicator, Platform, ScrollView, StyleSheet, Text, useColorScheme, View} from "react-native";
 import {Entypo, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import BannerList from "@/app/(tabs)/home/components/BannerList";
 import {colors} from "@/constants/colors";
 import CategoriesList from "@/app/(tabs)/home/components/CategoriesList";
 import CategorySection from "@/app/(tabs)/home/components/CategorySection";
 import {useCategory} from "@/hooks/useCategory";
+import {useSafeAreaInsets} from "react-native-safe-area-context";
 
 export default function Home() {
     const colorScheme = useColorScheme();
+    const insets = useSafeAreaInsets();
+    const androidHeaderOffset = Platform.OS === 'android' ? insets.top + 56 : 0;
 
     const {categories, loading, error} = useCategory();
 
@@ -18,6 +21,7 @@ export default function Home() {
         <ScrollView
             style={{backgroundColor: colorScheme === 'dark' ? colors.black : colors.white}}
             contentInsetAdjustmentBehavior='automatic'
+            contentContainerStyle={[styles.scrollContent, Platform.OS === 'android' && {paddingTop: androidHeaderOffset}]}
             showsVerticalScrollIndicator={false}
         >
 
@@ -26,8 +30,13 @@ export default function Home() {
                 <View style={styles.addressContainer}>
                     <MaterialIcons name="delivery-dining" size={28}
                                    color={colorScheme === 'dark' ? colors.white : colors.black}/>
-                    <Text style={[styles.address, {color: colorScheme === 'dark' ? colors.white : colors.black}]}>Your
-                        Address...</Text>
+                    <Text
+                        style={[styles.address, {color: colorScheme === 'dark' ? colors.white : colors.black}]}
+                        numberOfLines={1}
+                        ellipsizeMode='tail'
+                    >
+                        Your Address...
+                    </Text>
                     <Entypo name='chevron-small-down' size={24}
                             color={colorScheme === 'dark' ? colors.white : colors.black}/>
                 </View>
@@ -59,6 +68,9 @@ export default function Home() {
 };
 
 const styles = StyleSheet.create({
+    scrollContent: {
+        paddingBottom: 12,
+    },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -69,13 +81,14 @@ const styles = StyleSheet.create({
     },
     addressContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 4,
+        flex: 1,
+        marginRight: 12,
     },
     address: {
         fontSize: 18,
         paddingHorizontal: 8,
+        flexShrink: 1,
     },
     content: {
         justifyContent: 'center',
