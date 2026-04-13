@@ -18,4 +18,5 @@ export const colors = {
     danger: '#F04B3E',
     selectedGenderLight: '#E9FFF2',
     selectedGenderDark: '#184D37',
+    favouriteActive: '#FF4D8D',
 }

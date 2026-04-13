@@ -12,3 +12,18 @@ export async function getProductsByCategoryId(category_id: number) {
 
     return data;
 }
+
+export async function getProductsByIds(productIds: number[]) {
+    if (productIds.length === 0) return [];
+
+    const {data, error} = await supabase
+        .from('products')
+        .select()
+        .in('id', productIds);
+
+    if (error) {
+        throw new Error(error.message);
+    }
+
+    return data;
+}
