@@ -9,9 +9,11 @@ type Props = {
     price: number;
     cardStyle?: StyleProp<ViewStyle>;
     onAddPress?: () => void;
+    onAddToFavouritesPress?: () => void;
+    isFavourite?: boolean;
 };
 
-const ProductCard = ({image, title, rating, price, cardStyle, onAddPress}: Props) => {
+const ProductCard = ({image, title, rating, price, cardStyle, onAddPress, onAddToFavouritesPress, isFavourite = false}: Props) => {
     const colorScheme = useColorScheme();
     return (
         <View
@@ -21,6 +23,15 @@ const ProductCard = ({image, title, rating, price, cardStyle, onAddPress}: Props
                     style={[styles.imageContainer, {backgroundColor: colorScheme === 'dark' ? colors.darkGrey : colors.lightGrey}]}>
                     <Image source={{uri: image}} style={styles.image} resizeMode="contain"/>
                 </View>
+                <Pressable
+                    onPress={onAddToFavouritesPress}
+                    style={styles.favouriteButton}>
+                    <FontAwesome
+                        name={isFavourite ? "heart" : "heart-o"}
+                        size={20}
+                        color={isFavourite ? colors.favouriteActive : (colorScheme === 'dark' ? colors.white : colors.black)}
+                    />
+                </Pressable>
                 <Pressable
                     onPress={onAddPress}
                     disabled={!onAddPress}
@@ -76,6 +87,19 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         alignItems: "center",
         justifyContent: "center",
+        shadowColor: "#000",
+        shadowOpacity: 0.08,
+        shadowRadius: 6,
+        shadowOffset: {width: 0, height: 2},
+        elevation: 2,
+    },
+    favouriteButton: {
+        position: "absolute",
+        width: 40,
+        height: 40,
+        left: 108,
+        top: 10,
+        borderRadius: 20,
         shadowColor: "#000",
         shadowOpacity: 0.08,
         shadowRadius: 6,
