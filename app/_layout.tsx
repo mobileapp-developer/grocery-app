@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import * as SplashScreen from "expo-splash-screen";
 import {Stack} from "expo-router";
 import {AuthProvider} from "@/context/AuthContext";
+import {CartProvider} from "@/context/CartContext";
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -34,24 +35,26 @@ export default function RootLayout() {
 
     return (
         <AuthProvider>
-            <Stack>
-                <Stack.Screen
-                    name="(tabs)"
-                    options={{
-                        headerShown: false,
-                    }}
-                />
-                <Stack.Screen
-                    name="(modals)"
-                    options={{
-                        headerShown: false,
-                        headerTitle: "modals",
-                        headerLargeTitle: false,
-                        headerTransparent: true,
-                        headerBlurEffect: "light",
-                    }}
-                />
-            </Stack>
+            <CartProvider>
+                <Stack>
+                    <Stack.Screen
+                        name="(tabs)"
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="(modals)"
+                        options={{
+                            headerShown: false,
+                            headerTitle: "modals",
+                            headerLargeTitle: false,
+                            headerTransparent: true,
+                            headerBlurEffect: "light",
+                        }}
+                    />
+                </Stack>
+            </CartProvider>
         </AuthProvider>
     );
 }

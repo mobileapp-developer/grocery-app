@@ -9,3 +9,8 @@ export type Product = {
 export type CardListProps = {
     category_id: number;
 };
+
+export type CartItem = {
+    product: Product;
+    quantity: number;
+};
