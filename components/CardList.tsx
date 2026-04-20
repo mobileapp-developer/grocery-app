@@ -82,6 +82,7 @@ const CardList = ({category_id}: CardListProps) => {
             contentContainerStyle={{paddingHorizontal: 16}}
             renderItem={({item}) => (
                 <ProductCard
+                    id={item.id}
                     image={item.image}
                     title={item.title}
                     rating={item.rating}

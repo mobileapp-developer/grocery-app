@@ -1,7 +1,7 @@
 export const colors = {
     yellow: '#FFCC00',
     green: '#0CA201',
-    mint:  '#D7FFD4',
+    mint: '#E9F9E8',
     black: '#000000',
     white: '#FFFFFF',
     lightGrey: '#F6F6F6',
@@ -14,9 +14,9 @@ export const colors = {
     inputBgDark: '#2A2A2A',
     inputBorderLight: '#E8E8E8',
     inputBorderDark: '#3A3A3A',
-    accent: '#14B86A',
+    accent: '#0CA201',
     danger: '#F04B3E',
-    selectedGenderLight: '#E9FFF2',
-    selectedGenderDark: '#184D37',
+    selectedGenderLight: '#E9F9E8',
+    selectedGenderDark: '#1F4D1D',
     favouriteActive: '#FF4D8D',
 }

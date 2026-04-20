@@ -1,0 +1,118 @@
+import {Pressable, StyleProp, StyleSheet, Text, useColorScheme, ViewStyle} from "react-native";
+import {useEffect} from "react";
+import {Feather} from "@expo/vector-icons";
+import Animated, {Easing, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
+import {colors} from "@/constants/colors";
+import {useCart} from "@/context/CartContext";
+import {Product} from "@/types/product";
+
+type AddToCartButtonProps = {
+	product: Product;
+	style?: StyleProp<ViewStyle>;
+};
+
+export const AddToCartButton = ({product, style}: AddToCartButtonProps) => {
+	const colorScheme = useColorScheme();
+	const isDark = colorScheme === "dark";
+	const {items, addToCart, updateQuantity, removeFromCart} = useCart();
+
+	const cartItem = items.find(item => item.product.id === product.id);
+	const quantity = cartItem?.quantity ?? 0;
+
+	const isExpanded = quantity > 0;
+	const progress = useSharedValue(isExpanded ? 1 : 0);
+
+	useEffect(() => {
+		progress.value = withTiming(isExpanded ? 1 : 0, {
+			duration: 220,
+			easing: Easing.out(Easing.cubic),
+		});
+	}, [isExpanded, progress]);
+
+	const fabAnimatedStyle = useAnimatedStyle(() => ({
+		width: 38 + 78 * progress.value,
+		paddingHorizontal: 10 * progress.value,
+	}));
+
+	const plusAnimatedStyle = useAnimatedStyle(() => ({
+		opacity: 1 - progress.value,
+		transform: [{scale: 1 - 0.12 * progress.value}],
+	}));
+
+	const controlsAnimatedStyle = useAnimatedStyle(() => ({
+		opacity: progress.value,
+		transform: [{scale: 0.9 + 0.1 * progress.value}],
+	}));
+
+	const handleAdd = () => addToCart(product);
+	const handleIncrease = () => updateQuantity(product.id, quantity + 1);
+	const handleDecrease = () => {
+		if (quantity === 1) removeFromCart(product.id);
+		else updateQuantity(product.id, quantity - 1);
+	};
+
+	return (
+		<Animated.View
+			style={[
+				styles.fabBase,
+				{backgroundColor: isDark ? colors.black : colors.white},
+				fabAnimatedStyle,
+				style,
+			]}
+		>
+			<Animated.View
+				pointerEvents={isExpanded ? "none" : "auto"}
+				style={[styles.fabLayerCenter, plusAnimatedStyle]}
+			>
+				<Pressable onPress={handleAdd} style={styles.fabLayerCenter}>
+					<Feather name="plus" size={26} color={isDark ? "white" : "black"}/>
+				</Pressable>
+			</Animated.View>
+
+			<Animated.View
+				pointerEvents={isExpanded ? "auto" : "none"}
+				style={[styles.fabControlsRow, controlsAnimatedStyle]}
+			>
+				<Pressable onPress={handleDecrease}>
+					{quantity === 1
+						? <Feather name="trash-2" size={18} color={isDark ? "white" : "black"}/>
+						: <Feather name="minus" size={18} color={isDark ? "white" : "black"}/>
+					}
+				</Pressable>
+				<Text style={{color: isDark ? colors.white : colors.black, fontWeight: "700"}}>{quantity}</Text>
+				<Pressable onPress={handleIncrease}>
+					<Feather name="plus" size={18} color={isDark ? "white" : "black"}/>
+				</Pressable>
+			</Animated.View>
+		</Animated.View>
+	);
+};
+
+const styles = StyleSheet.create({
+	fabBase: {
+		position: "absolute",
+		right: 0,
+		bottom: -4,
+		height: 38,
+		borderRadius: 30,
+		justifyContent: "center",
+		overflow: "hidden",
+		shadowColor: "#000",
+		shadowOpacity: 0.08,
+		shadowRadius: 6,
+		shadowOffset: {width: 0, height: 2},
+		elevation: 2,
+	},
+	fabLayerCenter: {
+		...StyleSheet.absoluteFillObject,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	fabControlsRow: {
+		...StyleSheet.absoluteFillObject,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		paddingHorizontal: 10,
+	},
+});
