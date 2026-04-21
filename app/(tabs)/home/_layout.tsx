@@ -9,7 +9,7 @@ export default function HomeLayout() {
             screenOptions={{
                 headerLargeTitle: true,
                 headerTransparent: true,
-                headerBlurEffect: colorScheme === 'dark' ? 'dark' : 'light',
+                headerBlurEffect: colorScheme === 'dark' ? 'systemChromeMaterial' : 'light',
             }}
         >
             <Stack.Screen

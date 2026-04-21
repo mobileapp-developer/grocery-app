@@ -1,4 +1,4 @@
-import {ActivityIndicator, Platform, ScrollView, StyleSheet, Text, useColorScheme, View} from "react-native";
+import {ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View} from "react-native";
 import {Entypo, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import BannerList from "@/app/(tabs)/home/components/BannerList";
 import {colors} from "@/constants/colors";
@@ -6,13 +6,17 @@ import CategoriesList from "@/app/(tabs)/home/components/CategoriesList";
 import CategorySection from "@/app/(tabs)/home/components/CategorySection";
 import {useCategory} from "@/hooks/useCategory";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
+import {useLocation} from "@/context/LocationContext";
+import {useRouter} from "expo-router";
 
 export default function Home() {
-    const colorScheme = useColorScheme();
+    const router = useRouter();
     const insets = useSafeAreaInsets();
+    const colorScheme = useColorScheme();
     const androidHeaderOffset = Platform.OS === 'android' ? insets.top + 56 : 0;
 
     const {categories, loading, error} = useCategory();
+    const {address} = useLocation();
 
     if (loading) return <ActivityIndicator/>
     if (error) return <Text>{error}</Text>
@@ -27,7 +31,10 @@ export default function Home() {
 
             {/* HEADER */}
             <View style={styles.header}>
-                <View style={styles.addressContainer}>
+                <Pressable
+                    style={styles.addressContainer}
+                    onPress={() => router.push('/(modals)/location-picker')}
+                >
                     <MaterialIcons name="delivery-dining" size={28}
                                    color={colorScheme === 'dark' ? colors.white : colors.black}/>
                     <Text
@@ -35,11 +42,11 @@ export default function Home() {
                         numberOfLines={1}
                         ellipsizeMode='tail'
                     >
-                        Your Address...
+                        {address}
                     </Text>
                     <Entypo name='chevron-small-down' size={24}
                             color={colorScheme === 'dark' ? colors.white : colors.black}/>
-                </View>
+                </Pressable>
                 <View style={styles.bagIcon}>
                     <Ionicons name="bag-outline" size={24}
                               color={colorScheme === 'dark' ? colors.white : colors.black}/>

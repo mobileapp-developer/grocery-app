@@ -1,14 +1,23 @@
-import { Stack } from "expo-router";
+import {Stack} from "expo-router";
+import {useColorScheme} from "react-native";
 
 export default function FavouriteLayout() {
+    const colorScheme = useColorScheme();
     return (
         <Stack
             screenOptions={{
-                headerTitle: "Favourite",
+                headerShown: true,
                 headerLargeTitle: true,
                 headerTransparent: true,
-                headerBlurEffect: 'light',
+                headerBlurEffect: colorScheme === 'dark' ? 'systemChromeMaterial' : 'light',
             }}
-        />
+        >
+            <Stack.Screen
+                name="index"
+                options={{
+                    headerTitle: "Favourite",
+                }}
+            />
+        </Stack>
     );
 }
