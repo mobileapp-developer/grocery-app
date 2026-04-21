@@ -1,10 +1,9 @@
 import {useEffect, useState} from "react";
-import {ActivityIndicator, Button, StyleSheet, Text, useColorScheme, View} from "react-native";
+import {ActivityIndicator, Button, StyleSheet, Text, View} from "react-native";
 import MapView, {MapPressEvent, Marker, Region} from "react-native-maps";
 import * as Location from "expo-location";
 import {router} from "expo-router";
 import {useLocation} from "@/context/LocationContext";
-import {colors} from "@/constants/colors";
 
 type Coords = { latitude: number; longitude: number };
 
@@ -17,7 +16,6 @@ const DEFAULT_REGION: Region = {
 
 export default function LocationPickerModal() {
     const {setLocation} = useLocation();
-    const isDark = useColorScheme() === "dark";
     const [region, setRegion] = useState<Region>(DEFAULT_REGION);
     const [picked, setPicked] = useState<Coords | null>(null);
     const [addressLabel, setAddressLabel] = useState("Selected location");
@@ -46,26 +44,34 @@ export default function LocationPickerModal() {
     };
 
     useEffect(() => {
+        let cancelled = false;
         const init = async () => {
-            const {status} = await Location.requestForegroundPermissionsAsync();
-            if (status !== "granted") {
-                setError("Location permission denied");
-                setLoading(false);
-                return;
+            try {
+                const {status} = await Location.requestForegroundPermissionsAsync();
+                if (status !== "granted") {
+                    if (!cancelled) setError("Location permission denied");
+                    return;
+                }
+                const pos = await Location.getCurrentPositionAsync({});
+                const coords = {
+                    latitude: pos.coords.latitude,
+                    longitude: pos.coords.longitude
+                };
+                const label = await resolveAddress(coords);
+                if (cancelled) return;
+                setPicked(coords);
+                setRegion((prev) => ({...prev, ...coords}));
+                setAddressLabel(label);
+            } catch {
+                if (!cancelled) setError("Unable to determine current location");
+            } finally {
+                if (!cancelled) setLoading(false);
             }
-
-            const pos = await Location.getCurrentPositionAsync({});
-            const coords = {
-                latitude: pos.coords.latitude,
-                longitude: pos.coords.longitude
-            };
-            setPicked(coords);
-            setRegion((prev) => ({...prev, ...coords}));
-            setAddressLabel(await resolveAddress(coords));
-            setLoading(false);
         };
-
         void init();
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     const onMapPress = async (e: MapPressEvent) => {
@@ -80,23 +86,17 @@ export default function LocationPickerModal() {
         router.back();
     };
 
-    if (loading) return <ActivityIndicator style={styles.center} color={isDark ? colors.white : colors.black}/>;
-    if (error) {
-        return (
-            <View style={[styles.center, {backgroundColor: isDark ? colors.black : colors.white}]}>
-                <Text style={{color: isDark ? colors.white : colors.black}}>{error}</Text>
-            </View>
-        );
-    }
+    if (loading) return <ActivityIndicator style={{flex: 1}}/>;
+    if (error) return <View style={styles.center}><Text>{error}</Text></View>;
 
     return (
-        <View style={[styles.container, {backgroundColor: isDark ? colors.black : colors.white}]}>
+        <View style={styles.container}>
             <MapView style={styles.map} initialRegion={region} onPress={onMapPress}>
                 {picked && <Marker coordinate={picked} draggable onDragEnd={onMapPress as any}/>}
             </MapView>
 
-            <View style={[styles.footer, {backgroundColor: isDark ? colors.darkGrey : colors.white}]}>
-                <Text style={{color: isDark ? colors.white : colors.black}} numberOfLines={2}>{addressLabel}</Text>
+            <View style={styles.footer}>
+                <Text numberOfLines={2}>{addressLabel}</Text>
                 <Button title="Use this location" onPress={onConfirm}/>
             </View>
         </View>
@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
     footer: {
         padding: 16,
         gap: 10,
+        backgroundColor: "white"
     },
     center: {
         flex: 1,
