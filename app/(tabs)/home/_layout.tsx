@@ -7,7 +7,7 @@ export default function HomeLayout() {
     return (
         <Stack
             screenOptions={{
-                headerLargeTitle: true,
+                headerLargeTitleEnabled: true,
                 headerTransparent: true,
                 headerBlurEffect: colorScheme === 'dark' ? 'systemChromeMaterial' : 'light',
             }}
@@ -28,6 +28,14 @@ export default function HomeLayout() {
                         headerShown: true,
                         headerTitle: params?.title ?? "All",
                     };
+                }}
+            />
+            <Stack.Screen
+                name="cart"
+                options={{
+                    headerShown: true,
+                    headerLargeTitleEnabled: false,
+                    headerTitle: "Cart",
                 }}
             />
         </Stack>

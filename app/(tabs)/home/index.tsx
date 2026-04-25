@@ -47,10 +47,13 @@ export default function Home() {
                     <Entypo name='chevron-small-down' size={24}
                             color={colorScheme === 'dark' ? colors.white : colors.black}/>
                 </Pressable>
-                <View style={styles.bagIcon}>
+                <Pressable
+                    style={styles.bagIcon}
+                    onPress={() => router.push('/(tabs)/home/cart')}
+                >
                     <Ionicons name="bag-outline" size={24}
                               color={colorScheme === 'dark' ? colors.white : colors.black}/>
-                </View>
+                </Pressable>
             </View>
 
             {/* MAIN CONTENT*/}
