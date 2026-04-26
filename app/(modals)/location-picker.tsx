@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react";
-import {ActivityIndicator, Button, StyleSheet, Text, View} from "react-native";
+import {ActivityIndicator, Button, StyleSheet, Text, useColorScheme, View} from "react-native";
 import MapView, {MapPressEvent, Marker, Region} from "react-native-maps";
 import * as Location from "expo-location";
 import {router} from "expo-router";
 import {useLocation} from "@/context/LocationContext";
+import {colors} from "@/constants/colors";
 
 type Coords = { latitude: number; longitude: number };
 
@@ -16,6 +17,7 @@ const DEFAULT_REGION: Region = {
 
 export default function LocationPickerModal() {
     const {setLocation} = useLocation();
+    const colorScheme = useColorScheme();
     const [region, setRegion] = useState<Region>(DEFAULT_REGION);
     const [picked, setPicked] = useState<Coords | null>(null);
     const [addressLabel, setAddressLabel] = useState("Selected location");
@@ -95,8 +97,8 @@ export default function LocationPickerModal() {
                 {picked && <Marker coordinate={picked} draggable onDragEnd={onMapPress as any}/>}
             </MapView>
 
-            <View style={styles.footer}>
-                <Text numberOfLines={2}>{addressLabel}</Text>
+            <View style={[styles.footer, {backgroundColor: colorScheme === 'dark' ? colors.darkGrey : colors.white}]}>
+                <Text style={{color: colorScheme === 'dark' ? colors.white : colors.black}} numberOfLines={2}>{addressLabel}</Text>
                 <Button title="Use this location" onPress={onConfirm}/>
             </View>
         </View>

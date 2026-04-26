@@ -1,5 +1,8 @@
 import {CartItem, Product} from "@/types/product";
-import {createContext, ReactNode, useCallback, useContext, useMemo, useState} from "react";
+import {createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const CART_STORAGE_KEY = "cart:v1";
 
 type CartContextValue = {
     items: CartItem[];
@@ -17,6 +20,49 @@ type CartProviderProps = {
 
 export function CartProvider({children}: CartProviderProps) {
     const [items, setItems] = useState<CartItem[]>([]);
+    const isHydratedRef = useRef(false);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const hydrateCart = async () => {
+            try {
+                const raw = await AsyncStorage.getItem(CART_STORAGE_KEY);
+                if (!raw || !isMounted) return;
+
+                const parsed = JSON.parse(raw) as CartItem[];
+                if (Array.isArray(parsed)) {
+                    setItems(parsed);
+                }
+            } catch (error) {
+                console.error("Failed to hydrate cart", error);
+            } finally {
+                if (isMounted) {
+                    isHydratedRef.current = true;
+                }
+            }
+        };
+
+        void hydrateCart();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!isHydratedRef.current) return;
+
+        const persistCart = async () => {
+            try {
+                await AsyncStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+            } catch (error) {
+                console.error("Failed to persist cart", error);
+            }
+        };
+
+        void persistCart();
+    }, [items]);
 
     const addToCart = useCallback((product: Product) => {
         setItems((prev) => {

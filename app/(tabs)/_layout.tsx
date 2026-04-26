@@ -11,7 +11,7 @@ export default function TabLayout() {
             headerShown: false,
             animation: "shift",
             tabBarActiveTintColor: colors.green,
-            tabBarInactiveTintColor: colors.black,
+            tabBarInactiveTintColor: colorScheme === "dark" ? colors.mutedDark : colors.black,
             tabBarStyle: {
                 backgroundColor: colorScheme === 'dark' ? colors.black : colors.white,
                 borderTopColor: colorScheme === 'dark' ? colors.black : colors.white,
@@ -21,8 +21,8 @@ export default function TabLayout() {
                 name="home"
                 options={{
                     title: "Home",
-                    tabBarIcon: ({size, focused}) => (
-                        <Ionicons name={focused ? 'home' : 'home-outline'} color={focused ? colors.green : colors.black}
+                    tabBarIcon: ({size, focused, color}) => (
+                        <Ionicons name={focused ? 'home' : 'home-outline'} color={color}
                                   size={size}/>
                     ),
                 }}
@@ -31,9 +31,9 @@ export default function TabLayout() {
                 name="favourite"
                 options={{
                     title: "Favourite",
-                    tabBarIcon: ({size, focused}) => (
+                    tabBarIcon: ({size, focused, color}) => (
                         <Ionicons name={focused ? 'heart' : 'heart-outline'}
-                                  color={focused ? colors.green : colors.black} size={size}/>
+                                  color={color} size={size}/>
                     ),
                 }}
             />
@@ -41,9 +41,9 @@ export default function TabLayout() {
                 name="search"
                 options={{
                     title: "Search",
-                    tabBarIcon: ({size, focused}) => (
+                    tabBarIcon: ({size, focused, color}) => (
                         <Ionicons name={focused ? 'search' : 'search-outline'}
-                                  color={focused ? colors.green : colors.black} size={size}/>
+                                  color={color} size={size}/>
                     ),
                 }}
             />
@@ -51,9 +51,9 @@ export default function TabLayout() {
                 name="profile"
                 options={{
                     title: "Profile",
-                    tabBarIcon: ({size, focused}) => (
+                    tabBarIcon: ({size, focused, color}) => (
                         <Ionicons name={focused ? 'person' : 'person-outline'}
-                                  color={focused ? colors.green : colors.black} size={size}/>
+                                  color={color} size={size}/>
                     ),
                 }}
             />
@@ -61,8 +61,8 @@ export default function TabLayout() {
                 name="menu"
                 options={{
                     title: "Menu",
-                    tabBarIcon: ({size, focused}) => (
-                        <Ionicons name={focused ? 'menu' : 'menu-outline'} color={focused ? colors.green : colors.black}
+                    tabBarIcon: ({size, focused, color}) => (
+                        <Ionicons name={focused ? 'menu' : 'menu-outline'} color={color}
                                   size={size}/>
                     ),
                 }}
