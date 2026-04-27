@@ -11,6 +11,7 @@ export type CardListProps = {
 };
 
 export type CartItem = {
+    key: string;
     product: Product;
     quantity: number;
 };

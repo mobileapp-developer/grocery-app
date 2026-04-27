@@ -67,7 +67,7 @@ export default function CategoryProductsScreen() {
     return (
         <FlatList
             data={products}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item, index) => `${item.id}-${item.title}-${index}`}
             numColumns={2}
             contentContainerStyle={styles.listContent}
             renderItem={({item}) => (
@@ -85,7 +85,7 @@ export default function CategoryProductsScreen() {
             ListEmptyComponent={<Text style={styles.emptyText}>No products in this category.</Text>}
         />
     );
-}
+};
 
 const styles = StyleSheet.create({
     centered: {
