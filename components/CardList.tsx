@@ -76,7 +76,7 @@ const CardList = ({category_id}: CardListProps) => {
     return (
         <FlatList
             data={products.slice(0, 5)}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={(item, index) => `${item.id}-${item.title}-${index}`}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{paddingHorizontal: 16}}

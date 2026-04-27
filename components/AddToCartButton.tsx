@@ -14,10 +14,8 @@ type AddToCartButtonProps = {
 export const AddToCartButton = ({product, style}: AddToCartButtonProps) => {
 	const colorScheme = useColorScheme();
 	const isDark = colorScheme === "dark";
-	const {items, addToCart, updateQuantity, removeFromCart} = useCart();
-
-	const cartItem = items.find(item => item.product.id === product.id);
-	const quantity = cartItem?.quantity ?? 0;
+	const {getQuantity, addToCart, updateQuantity, removeFromCart} = useCart();
+	const quantity = getQuantity(product);
 
 	const isExpanded = quantity > 0;
 	const progress = useSharedValue(isExpanded ? 1 : 0);
@@ -45,10 +43,10 @@ export const AddToCartButton = ({product, style}: AddToCartButtonProps) => {
 	}));
 
 	const handleAdd = () => addToCart(product);
-	const handleIncrease = () => updateQuantity(product.id, quantity + 1);
+	const handleIncrease = () => updateQuantity(product, quantity + 1);
 	const handleDecrease = () => {
-		if (quantity === 1) removeFromCart(product.id);
-		else updateQuantity(product.id, quantity - 1);
+		if (quantity === 1) removeFromCart(product);
+		else updateQuantity(product, quantity - 1);
 	};
 
 	return (

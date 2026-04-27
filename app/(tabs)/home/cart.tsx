@@ -14,7 +14,7 @@ export default function Cart() {
         <View style={[styles.container, {backgroundColor: isDark ? colors.black : colors.white}]}>
             <FlatList
                 data={items}
-                keyExtractor={(item) => item.product.id.toString()}
+                keyExtractor={(item) => item.key}
                 contentContainerStyle={[styles.listContent, {paddingTop: insets.top + 56}]}
                 style={styles.list}
                 renderItem={({item}) => (
@@ -23,9 +23,9 @@ export default function Cart() {
                         price={parseFloat((item.product.price * item.quantity).toFixed(2))}
                         quantity={item.quantity}
                         image={item.product.image}
-                        onIncrease={() => updateQuantity(item.product.id, item.quantity + 1)}
-                        onDecrease={() => updateQuantity(item.product.id, item.quantity - 1)}
-                        onRemove={() => removeFromCart(item.product.id)}
+                        onIncrease={() => updateQuantity(item.product, item.quantity + 1)}
+                        onDecrease={() => updateQuantity(item.product, item.quantity - 1)}
+                        onRemove={() => removeFromCart(item.product)}
                     />
                 )}
                 ListEmptyComponent={
