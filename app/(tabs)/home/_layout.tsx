@@ -2,14 +2,14 @@ import {Stack} from "expo-router";
 import {useColorScheme} from "react-native";
 
 export default function HomeLayout() {
-    const colorScheme = useColorScheme();
+    const isDark = useColorScheme() === 'dark';
 
     return (
         <Stack
             screenOptions={{
-                headerLargeTitleEnabled: true,
                 headerTransparent: true,
-                headerBlurEffect: colorScheme === 'dark' ? 'systemChromeMaterial' : 'light',
+                headerLargeTitleEnabled: true,
+                headerBlurEffect: isDark ? 'systemChromeMaterial' : 'light',
             }}
         >
             <Stack.Screen
@@ -26,7 +26,7 @@ export default function HomeLayout() {
 
                     return {
                         headerShown: true,
-                        headerTitle: params?.title ?? "All",
+                        headerTitle: params?.title ?? 'All',
                     };
                 }}
             />
@@ -34,24 +34,24 @@ export default function HomeLayout() {
                 name="cart"
                 options={{
                     headerShown: true,
+                    headerTitle: 'Cart',
                     headerLargeTitleEnabled: false,
-                    headerTitle: "Cart",
                 }}
             />
             <Stack.Screen
                 name='checkout'
                 options={{
                     headerShown: true,
-                    headerLargeTitleEnabled: false,
                     headerTitle: 'Checkout',
+                    headerLargeTitleEnabled: false,
                 }}
             />
             <Stack.Screen
                 name='payment'
                 options={{
                     headerShown: false,
-                    headerLargeTitleEnabled: false,
                     headerTitle: 'Payment',
+                    headerLargeTitleEnabled: false,
                 }}
             />
         </Stack>
