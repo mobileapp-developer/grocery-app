@@ -1,14 +1,19 @@
-import {FlatList, StyleSheet, Text, useColorScheme, View} from "react-native";
+import {FlatList, Pressable, StyleSheet, Text, useColorScheme, View} from "react-native";
 import {colors} from "@/constants/colors";
 import {useCart} from "@/context/CartContext";
 import CartItem from "@/components/CartItem";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
+import {useRouter} from "expo-router";
+import {getCartSubtotal} from "@/utilities/cart";
 
 export default function Cart() {
-    const {items, updateQuantity, removeFromCart} = useCart();
-    const colorScheme = useColorScheme();
+    const router = useRouter();
     const insets = useSafeAreaInsets();
-    const isDark = colorScheme === 'dark';
+    const isDark = useColorScheme() === 'dark';
+    const {items, updateQuantity, removeFromCart} = useCart();
+    const canCheckout = items.length > 1;
+
+    const total = getCartSubtotal(items);
 
     return (
         <View style={[styles.container, {backgroundColor: isDark ? colors.black : colors.white}]}>
@@ -33,6 +38,22 @@ export default function Cart() {
                         empty.</Text>
                 }
             />
+            <View style={styles.summaryRow}>
+                <Text style={[styles.summaryLabel, {color: isDark ? colors.white : colors.black}]}>
+                    Total
+                </Text>
+                <Text style={[styles.summaryValue, {color: isDark ? colors.white : colors.black}]}>
+                    ${total.toFixed(2)}
+                </Text>
+            </View>
+            <View style={styles.separator}></View>
+            <Pressable
+                style={[styles.button, !canCheckout && styles.buttonDisabled]}
+                onPress={() => router.push('/home/checkout')}
+                disabled={!canCheckout}
+            >
+                <Text style={styles.buttonText}>Go to checkout</Text>
+            </Pressable>
         </View>
     );
 };
@@ -53,6 +74,41 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 24,
         fontSize: 16,
+    },
+    button: {
+        margin: 16,
+        paddingVertical: 14,
+        borderRadius: 12,
+        backgroundColor: colors.green,
+        alignItems: "center",
+    },
+    buttonDisabled: {
+      opacity: 0.5,
+    },
+    buttonText: {
+        color: colors.white,
+        fontSize: 16,
+        fontWeight: "700",
+    },
+    summaryRow: {
+        marginHorizontal: 16,
+        marginTop: 8,
+        marginBottom: 8,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    summaryLabel: {
+        fontSize: 16,
+        fontWeight: "600",
+    },
+    summaryValue: {
+        fontSize: 18,
+        fontWeight: "700",
+    },
+    separator: {
+        borderColor: colors.lightGrey,
+        borderWidth: 1
     },
 });
 

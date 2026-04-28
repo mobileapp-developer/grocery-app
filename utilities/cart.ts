@@ -1,7 +1,7 @@
 import {CartItem, Product} from "@/types/product";
 
 export function getCartItemKey(product: Product): string {
-    return `${String(product.id)}::${product.title}::${product.image}`;
+    return String(product.id);
 }
 
 export function normalizeCartItems(parsed: CartItem[]): CartItem[] {
@@ -62,4 +62,12 @@ export function updateItemQuantity(items: CartItem[], product: Product, quantity
     return items.map((item) =>
         item.key === key ? {...item, quantity} : item
     );
+}
+
+export function getCartSubtotal(items: CartItem[]): number {
+    return items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+}
+
+export function getCartItemCount(items: CartItem[]): number {
+    return items.reduce((sum, item) => sum + item.quantity, 0);
 }
