@@ -38,6 +38,22 @@ export default function HomeLayout() {
                     headerTitle: "Cart",
                 }}
             />
+            <Stack.Screen
+                name='checkout'
+                options={{
+                    headerShown: true,
+                    headerLargeTitleEnabled: false,
+                    headerTitle: 'Checkout',
+                }}
+            />
+            <Stack.Screen
+                name='payment'
+                options={{
+                    headerShown: false,
+                    headerLargeTitleEnabled: false,
+                    headerTitle: 'Payment',
+                }}
+            />
         </Stack>
     );
 }

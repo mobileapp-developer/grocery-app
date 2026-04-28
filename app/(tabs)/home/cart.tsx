@@ -1,14 +1,21 @@
-import {FlatList, StyleSheet, Text, useColorScheme, View} from "react-native";
+import {useMemo} from "react";
+import {FlatList, Pressable, StyleSheet, Text, useColorScheme, View} from "react-native";
 import {colors} from "@/constants/colors";
 import {useCart} from "@/context/CartContext";
 import CartItem from "@/components/CartItem";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
+import {useRouter} from "expo-router";
 
 export default function Cart() {
     const {items, updateQuantity, removeFromCart} = useCart();
     const colorScheme = useColorScheme();
     const insets = useSafeAreaInsets();
+    const router = useRouter();
     const isDark = colorScheme === 'dark';
+
+    const total = useMemo(() => {
+        return items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    }, [items]);
 
     return (
         <View style={[styles.container, {backgroundColor: isDark ? colors.black : colors.white}]}>
@@ -33,6 +40,18 @@ export default function Cart() {
                         empty.</Text>
                 }
             />
+            <View style={styles.summaryRow}>
+                <Text style={[styles.summaryLabel, {color: isDark ? colors.white : colors.black}]}>
+                    Total
+                </Text>
+                <Text style={[styles.summaryValue, {color: isDark ? colors.white : colors.black}]}>
+                    ${total.toFixed(2)}
+                </Text>
+            </View>
+            <View style={styles.separator}></View>
+            <Pressable style={styles.button} onPress={() => router.push('/home/checkout')}>
+                <Text style={styles.buttonText}>Go to checkout</Text>
+            </Pressable>
         </View>
     );
 };
@@ -53,6 +72,38 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 24,
         fontSize: 16,
+    },
+    button: {
+        margin: 16,
+        paddingVertical: 14,
+        borderRadius: 12,
+        backgroundColor: colors.green,
+        alignItems: "center",
+    },
+    buttonText: {
+        color: colors.white,
+        fontSize: 16,
+        fontWeight: "700",
+    },
+    summaryRow: {
+        marginHorizontal: 16,
+        marginTop: 8,
+        marginBottom: 8,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    summaryLabel: {
+        fontSize: 16,
+        fontWeight: "600",
+    },
+    summaryValue: {
+        fontSize: 18,
+        fontWeight: "700",
+    },
+    separator: {
+        borderColor: colors.lightGrey,
+        borderWidth: 1
     },
 });
 

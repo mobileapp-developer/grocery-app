@@ -1,7 +1,7 @@
 import {CartItem, Product} from "@/types/product";
 
 export function getCartItemKey(product: Product): string {
-    return `${String(product.id)}::${product.title}::${product.image}`;
+    return String(product.id);
 }
 
 export function normalizeCartItems(parsed: CartItem[]): CartItem[] {
