@@ -6,12 +6,12 @@ import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {useRouter} from "expo-router";
 import {getCartSubtotal} from "@/utilities/cart";
 
-export default function Cart() {
+export default function Index() {
     const router = useRouter();
     const insets = useSafeAreaInsets();
     const isDark = useColorScheme() === 'dark';
     const {items, updateQuantity, removeFromCart} = useCart();
-    const canCheckout = items.length > 1;
+    const canCheckout = items.length > 0;
 
     const total = getCartSubtotal(items);
 

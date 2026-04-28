@@ -1,5 +1,14 @@
 import {useEffect, useState} from "react";
-import {ActivityIndicator, Pressable, ScrollView, StyleSheet, Switch, Text, useColorScheme, View} from "react-native";
+import {
+    ActivityIndicator,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Switch,
+    Text,
+    useColorScheme,
+    View
+} from "react-native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {SectionTitle} from "@/app/(tabs)/home/checkout/components/SectionTitle";
 import {DeliveryRow} from "@/app/(tabs)/home/checkout/components/DeliveryRow";
@@ -190,8 +199,11 @@ export default function CheckoutScreen() {
             </View>
 
 
-            <Pressable style={[styles.placeOrderButton, {backgroundColor: theme.accent}]}>
-                <Text style={styles.placeOrderText}>Place Order</Text>
+            <Pressable
+                style={[styles.placeOrderButton, {backgroundColor: theme.accent}]}
+                onPress={() => router.push('/home/payment')}
+            >
+                <Text style={styles.placeOrderText}>Continue to payment</Text>
             </Pressable>
         </ScrollView>
     );

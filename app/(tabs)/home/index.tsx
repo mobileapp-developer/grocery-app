@@ -49,7 +49,7 @@ export default function Home() {
                 </Pressable>
                 <Pressable
                     style={styles.bagIcon}
-                    onPress={() => router.push('/(tabs)/home/cart')}
+                    onPress={() => router.push('/home/cart')}
                 >
                     <Ionicons name="bag-outline" size={24}
                               color={colorScheme === 'dark' ? colors.white : colors.black}/>
