@@ -1,3 +1,7 @@
+export function onlyDigits(value: string) {
+    return value.replace(/\D/g, '');
+}
+
 export function formatCardNumber(value: string) {
     const digits = value.replace(/\D/g, "").slice(0, 16);
     return digits.replace(/(.{4})/g, "$1 ").trim();

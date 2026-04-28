@@ -15,6 +15,9 @@ export const DeliveryRow = ({icon, label, selected, onPress, color, borderColor,
     return (
         <Pressable
             onPress={onPress}
+            accessibilityRole="radio"
+            accessibilityState={{selected}}
+            accessibilityLabel={label}
             style={[styles.row, {borderBottomColor: borderColor, borderBottomWidth: 1}]}
         >
             <View style={styles.rowLeft}>

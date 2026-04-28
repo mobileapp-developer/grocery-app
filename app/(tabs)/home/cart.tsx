@@ -1,21 +1,19 @@
-import {useMemo} from "react";
 import {FlatList, Pressable, StyleSheet, Text, useColorScheme, View} from "react-native";
 import {colors} from "@/constants/colors";
 import {useCart} from "@/context/CartContext";
 import CartItem from "@/components/CartItem";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {useRouter} from "expo-router";
+import {getCartSubtotal} from "@/utilities/cart";
 
 export default function Cart() {
-    const {items, updateQuantity, removeFromCart} = useCart();
-    const colorScheme = useColorScheme();
-    const insets = useSafeAreaInsets();
     const router = useRouter();
-    const isDark = colorScheme === 'dark';
+    const insets = useSafeAreaInsets();
+    const isDark = useColorScheme() === 'dark';
+    const {items, updateQuantity, removeFromCart} = useCart();
+    const canCheckout = items.length > 1;
 
-    const total = useMemo(() => {
-        return items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-    }, [items]);
+    const total = getCartSubtotal(items);
 
     return (
         <View style={[styles.container, {backgroundColor: isDark ? colors.black : colors.white}]}>
@@ -49,7 +47,11 @@ export default function Cart() {
                 </Text>
             </View>
             <View style={styles.separator}></View>
-            <Pressable style={styles.button} onPress={() => router.push('/home/checkout')}>
+            <Pressable
+                style={[styles.button, !canCheckout && styles.buttonDisabled]}
+                onPress={() => router.push('/home/checkout')}
+                disabled={!canCheckout}
+            >
                 <Text style={styles.buttonText}>Go to checkout</Text>
             </Pressable>
         </View>
@@ -79,6 +81,9 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         backgroundColor: colors.green,
         alignItems: "center",
+    },
+    buttonDisabled: {
+      opacity: 0.5,
     },
     buttonText: {
         color: colors.white,

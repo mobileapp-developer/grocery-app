@@ -7,11 +7,13 @@ type Props = {
     subtitle?: string;
     color: string;
     borderColor?: string;
+    onPress?: () => void;
 }
 
-export const Row = ({icon, label, subtitle, color, borderColor}: Props) => {
+export const Row = ({icon, label, subtitle, color, borderColor, onPress}: Props) => {
     return (
-        <Pressable style={[styles.row, borderColor ? {borderBottomColor: borderColor, borderBottomWidth: 1} : null]}>
+        <Pressable onPress={onPress}
+            style={[styles.row, borderColor ? {borderBottomColor: borderColor, borderBottomWidth: 1} : null]}>
             <View style={styles.rowLeft}>
                 <Ionicons name={icon} size={20} color={color}/>
                 <View style={styles.rowTextWrap}>

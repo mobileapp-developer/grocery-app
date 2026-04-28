@@ -12,6 +12,7 @@ import {Profile} from "@/types/profile";
 import {getProfiles} from "@/db/profiles";
 import {FontAwesome6, MaterialCommunityIcons} from "@expo/vector-icons";
 import {useRouter} from "expo-router";
+import {getCartItemCount, getCartSubtotal} from "@/utilities/cart";
 
 type DeliveryType = 'priority' | 'standard';
 
@@ -69,8 +70,8 @@ export default function CheckoutScreen() {
     const fullName = profile ? `${profile.first_name} ${profile.last_name}`.trim() : 'User';
     const phone = profile?.phone || 'No phone';
 
-    const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-    const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    const subtotal = getCartSubtotal(items);
+    const totalItems = getCartItemCount(items);
     const serviceFee = subtotal * SERVICE_FEE_PERCENT;
     const deliveryFee = DELIVERY_FEES[deliveryType];
     const total = subtotal + BAG_FEE + serviceFee + deliveryFee;

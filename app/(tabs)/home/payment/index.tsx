@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import {useState} from "react";
 import {
     Pressable,
     ScrollView,
@@ -12,7 +12,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontAwesome6, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "@/constants/colors";
 import {PaymentOption} from "@/app/(tabs)/home/payment/components/PaymentOption";
-import {formatCardNumber, formatCvc, formatExpiry} from "@/utilities/formatCard";
+import {formatCardNumber, formatCvc, formatExpiry, onlyDigits} from "@/utilities/formatCard";
+import {useCart} from "@/context/CartContext";
+import {getCartSubtotal} from "@/utilities/cart";
 
 type PaymentMethod = "apple" | "card";
 
@@ -20,6 +22,9 @@ export default function PaymentScreen() {
     const insets = useSafeAreaInsets();
     const colorScheme = useColorScheme();
     const isDark = colorScheme === "dark";
+
+    const {items} = useCart();
+    const total = getCartSubtotal(items);
 
     const [method, setMethod] = useState<PaymentMethod>("card");
     const [cardNumber, setCardNumber] = useState("");
@@ -36,13 +41,14 @@ export default function PaymentScreen() {
         accent: colors.accent,
     };
 
-    const total = 49.0; // заміни на суму з cart/checkout, якщо треба
+    const cardDigits = onlyDigits(cardNumber);
+    const expiryDigits = onlyDigits(expiry);
+    const cvcDigits = onlyDigits(cvc);
 
-    const cardDigits = useMemo(() => cardNumber.replace(/\D/g, ""), [cardNumber]);
-    const expiryDigits = useMemo(() => expiry.replace(/\D/g, ""), [expiry]);
-    const cvcDigits = useMemo(() => cvc.replace(/\D/g, ""), [cvc]);
-
-    const canPayCard = cardDigits.length === 16 && expiryDigits.length === 4 && cvcDigits.length >= 3;
+    const canPayCard =
+        cardDigits.length === 16 &&
+        expiryDigits.length === 4 &&
+        cvcDigits.length >= 3;
 
     return (
         <View style={[styles.container, { backgroundColor: theme.screen }]}>

@@ -63,3 +63,11 @@ export function updateItemQuantity(items: CartItem[], product: Product, quantity
         item.key === key ? {...item, quantity} : item
     );
 }
+
+export function getCartSubtotal(items: CartItem[]): number {
+    return items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+}
+
+export function getCartItemCount(items: CartItem[]): number {
+    return items.reduce((sum, item) => sum + item.quantity, 0);
+}
